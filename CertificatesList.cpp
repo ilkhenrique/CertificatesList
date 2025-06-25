@@ -23,6 +23,11 @@
 
 #define WARN_DAYS 120
 
+// put your site here if you want to save the list to the web. 
+// Remember to upload and adjust uploadcert.php
+
+#define POST_SITE L""
+
 struct CertificateInfo {
     std::wstring subject;
     std::wstring issuer;
@@ -171,6 +176,10 @@ public:
     }
 
     bool SendReportToServer(const std::wstring& report) {
+
+        if (wcslen(POST_SITE) == 0)
+            return false;
+
         HINTERNET hSession = WinHttpOpen(
             L"CertificateManager/1.0",
             WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
@@ -180,7 +189,7 @@ public:
 
         if (!hSession) return false;
         HINTERNET hConnect = WinHttpConnect(
-            hSession, L"infopet.com.br",
+            hSession, POST_SITE,
             INTERNET_DEFAULT_HTTPS_PORT, 0
         );
 
